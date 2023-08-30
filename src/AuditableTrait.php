@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace fabian004\MyAuditPackage;
 
 use Illuminate\Support\Facades\DB;
 
