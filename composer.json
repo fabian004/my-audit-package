@@ -1,0 +1,11 @@
+{
+    "name": "fabian004/my-audit-package",
+    "description": "Un trait para auditar modelos en Laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "fabian004\\MyAuditPackage\\": "src/"
+        }
+    }
+}
