@@ -94,7 +94,7 @@ trait AuditableTrait
                 continue;
             }
             $value2 = $original[$key];
-            if ($value1 !== $value2) 
+            if ($value1 != $value2) 
             {
                 $newFields[$key] = $value1;
                 $oldFields[$key] = $value2;
