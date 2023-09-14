@@ -14,7 +14,7 @@ trait AuditableTrait
             $id = $item->attributes["id"];
             DB::table('audits')->insert(
                 [
-                    'user_type' => 'App\Models\User', 
+                    'user_type' => get_class(auth()->user()), 
                     'user_id' => auth()->user()->id, 
                     'event' => "created", 
                     'auditable_type' => get_class($item), 
