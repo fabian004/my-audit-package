@@ -14,16 +14,16 @@ trait AuditableTrait
             $id = $item->attributes["id"];
             DB::table('audits')->insert(
                 [
-                    'user_type' => get_class(auth()->user()), 
-                    'user_id' => auth()->user()->id, 
+                    'user_type' => auth()->user() ? get_class(auth()->user()) : 'App\Models\User',
+                    'user_id' => auth()->user() ? auth()->user()->id : 0, 
                     'event' => "created", 
                     'auditable_type' => get_class($item), 
                     'auditable_id' => "$id", 
                     "old_values" =>"[]", 
                     "new_values" => json_encode($item->attributes), 
-                    "url"=> $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"],
-                    "ip_address" => $_SERVER["REMOTE_ADDR"], 
-                    "user_agent" => $_SERVER["HTTP_USER_AGENT"], 
+                    "url"=> isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] : '',
+                    "ip_address" => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : '', 
+                    "user_agent" => isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : '', 
                     'created_at' => $now, 
                     'updated_at' => $now
                 ]
@@ -31,7 +31,6 @@ trait AuditableTrait
         });
         static::updating(function($item) 
         {
-            $authUser = auth()->user();
             $serverVars = [
                 "HTTP_HOST" => $_SERVER["HTTP_HOST"],
                 "REQUEST_URI" => $_SERVER["REQUEST_URI"],
@@ -44,15 +43,15 @@ trait AuditableTrait
             DB::table('audits')->insert(
                 [
                     'user_type' => 'App\Models\User', 
-                    'user_id' => $authUser->id, 
+                    'user_id' => auth()->user() ? auth()->user()->id : 0, 
                     'event' => "updated", 
                     'auditable_type' => get_class($item), 
                     'auditable_id' => "$id", 
                     "old_values" => json_encode($oldFields), 
                     "new_values" => json_encode($newFields), 
-                    "url"=> $serverVars["HTTP_HOST"].$serverVars["REQUEST_URI"],
-                    "ip_address" => $serverVars["REMOTE_ADDR"], 
-                    "user_agent" => $serverVars["HTTP_USER_AGENT"] , 
+                    "url"=> isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] : '',
+                    "ip_address" => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : '', 
+                    "user_agent" => isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : '', 
                     'created_at' => $now, 
                     'updated_at' => $now
                 ]
@@ -68,15 +67,15 @@ trait AuditableTrait
             DB::table('audits')->insert(
                 [
                     'user_type' => 'App\Models\User', 
-                    'user_id' => auth()->user()->id, 
+                    'user_id' => auth()->user() ? auth()->user()->id : 0, 
                     'event' => "deleted", 
                     'auditable_type' => get_class($item), 
                     'auditable_id' => "$id", 
                     "old_values" => json_encode($oldFields),
                     "new_values" => json_encode($newFields), 
-                    "url"=> $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"],
-                    "ip_address" => $_SERVER["REMOTE_ADDR"], 
-                    "user_agent" => $_SERVER["HTTP_USER_AGENT"] , 
+                    "url"=> isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] : '',
+                    "ip_address" => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : '', 
+                    "user_agent" => isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : '', 
                     'created_at' => $now, 
                     'updated_at' => $now
                 ]
